@@ -1,5 +1,6 @@
 package com.example.bankmanagementsystem.Controller;
 
+import com.example.bankmanagementsystem.Api.ApiResponse;
 import com.example.bankmanagementsystem.Model.Customers;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,58 +19,58 @@ public class CustomersController {
 
     // Add new customers
     @PostMapping("/add")
-    public String addCustomer(@RequestBody Customers customer) {
+    public ApiResponse addCustomer(@RequestBody Customers customer) {
         bank.add(customer);
-        return "Customer added successfully";
+        return new ApiResponse("Customer added successfully");
     }
 
     //    Update customers
     @PutMapping("/update/{id}")
-    public String updateCustomer(@PathVariable int id, @RequestBody Customers updatedCustomer) {
+    public ApiResponse updateCustomer(@PathVariable int id, @RequestBody Customers updatedCustomer) {
         for (Customers customer : bank) {
             if (customer.getId() == id) {
                 customer.setUserName(updatedCustomer.getUserName());
                 customer.setBalance(updatedCustomer.getBalance());
-                return "Customer updated successfully";
+                return new ApiResponse("Customer updated successfully!");
             }
         }
-        return "Customer not found";
+        return new ApiResponse("Customer not found");
     }
 
     //    Delete customers
     @DeleteMapping("/delete/{id}")
-    public String deleteCustomer(@PathVariable int id) {
+    public ApiResponse deleteCustomer(@PathVariable int id) {
         for (int i = 0; i < bank.size(); i++) {
             if (bank.get(i).getId() == id) {
                 bank.remove(i);
-                return "Customer deleted successfully!";
+                return new ApiResponse("Customer deleted successfully!");
             }
         }
-        return "Customer not found";
+        return new ApiResponse("Customer not found");
     }
 
 
     //    Deposit money to customer
     @PatchMapping("/deposit/{id}/{amount}")
-    public String depositMoney(@PathVariable int id, @PathVariable double amount) {
+    public ApiResponse depositMoney(@PathVariable int id, @PathVariable double amount) {
         for (Customers customer : bank) {
             if (customer.getId() == id) {
                 customer.setBalance(customer.getBalance() + amount);
-                return "Deposited " + amount + "RS successfully";
+                return new ApiResponse("Deposited " + amount + "RS successfully");
             }
         }
-        return "Customer not found";
+        return new ApiResponse("Customer not found");
     }
 
     //    Withdraw money from customers
     @PatchMapping("/withdraw/{id}/{amount}")
-    public String withdrawMoney(@PathVariable int id, @PathVariable double amount) {
+    public ApiResponse withdrawMoney(@PathVariable int id, @PathVariable double amount) {
         for (Customers customer : bank) {
             if (customer.getId() == id && customer.getBalance() >= amount) {
                 customer.setBalance(customer.getBalance() - amount);
-                return "Withdrew " + amount + " RS successfully";
+                return new ApiResponse("Withdrew " + amount + " RS successfully");
             }
         }
-        return "Customer not found";
+        return new ApiResponse("Customer not found");
     }
 }
